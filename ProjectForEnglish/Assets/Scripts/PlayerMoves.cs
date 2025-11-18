@@ -18,6 +18,12 @@ public class PlayerMoves : MonoBehaviour
     int direction;
     float dashLength = 0.2f;
     float dashTime;
+
+    //buffer variables
+    float bufferTime = 0.1f;
+    float jumpInputTime;
+    float coyoteTime;
+    float dashInputTime;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -26,16 +32,48 @@ public class PlayerMoves : MonoBehaviour
     
     void Update()
     {
+        //grounded checking
+
         grounded = isGrounded();
+        if (grounded)
+        {
+            coyoteTime = Time.time;
+            rb.sharedMaterial.friction = 0.4f;
+        }
+        else
+        {
+            rb.sharedMaterial.friction = 0;
+        }
+
         moveX = Input.GetAxis("Horizontal") * speed;
         if (!dashing)
         {
             rb.velocity = new Vector3(moveX, rb.velocity.y);
         }
-        if (Input.GetButtonDown("Jump") && (grounded || hasAirJump))
+
+        //directions
+
+        if (moveX > 0)
         {
+            direction = 1;
+        }
+        else if (moveX < 0)
+        {
+            direction = -1;
+        }
+
+        //jumps and dashes
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            jumpInputTime = Time.time;
+        }
+        if (Time.time - jumpInputTime < bufferTime && (Time.time - coyoteTime < bufferTime || hasAirJump))
+        {
+            rb.sharedMaterial.friction = 0;
+            jumpInputTime = -2;
             //jumping = true;
-            if (!grounded)
+            if (Time.time - coyoteTime >= bufferTime)
             {
                 hasAirJump = false;
             }
@@ -55,16 +93,13 @@ public class PlayerMoves : MonoBehaviour
             //jumping = false;
             rb.velocity = new Vector3(rb.velocity.x, 0.5f * rb.velocity.y);
         }
-        if (moveX > 0)
+        if (Input.GetButtonDown("Shift"))
         {
-            direction = 1;
+            dashInputTime = Time.time;
         }
-        else if (moveX < 0)
+        if (Time.time - dashInputTime < bufferTime && hasAirDash)
         {
-            direction = -1;
-        }
-        if (Input.GetButtonDown("Shift") && hasAirDash)
-        {
+            dashInputTime = -2;
             hasAirDash = false;
             rb.gravityScale = 0;
             rb.velocity = Vector2.zero;
