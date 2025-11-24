@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMoves : MonoBehaviour
 {
     Rigidbody2D rb;
-    float speed = 6.0f;
+    float speed = 7.0f;
     float jumpForce = 13.0f;
     float jumpForceFromDash = 7.0f;
     float dashForce = 20.0f;
@@ -38,7 +38,7 @@ public class PlayerMoves : MonoBehaviour
         if (grounded)
         {
             coyoteTime = Time.time;
-            rb.sharedMaterial.friction = 0.4f;
+            rb.sharedMaterial.friction = 2f;
         }
         else
         {
@@ -117,7 +117,7 @@ public class PlayerMoves : MonoBehaviour
     {
         //jumping = false;
         List<RaycastHit2D> hits = new();
-        if (rb.Cast(Vector2.down, hits, 0.25f) > 0)
+        if (rb.Cast(Vector2.down, hits, 0.1f) > 0)
         {
             foreach (RaycastHit2D hit in hits)
             {
