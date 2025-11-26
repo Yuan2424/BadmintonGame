@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerMoves : MonoBehaviour
 {
     Rigidbody2D rb;
+    SpriteRenderer spriteRenderer;
+    Animator anim;
     float speed = 7.0f;
     float jumpForce = 13.0f;
     float jumpForceFromDash = 7.0f;
@@ -27,6 +29,8 @@ public class PlayerMoves : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
     }
 
     
@@ -56,13 +60,15 @@ public class PlayerMoves : MonoBehaviour
         if (moveX > 0)
         {
             direction = 1;
+            spriteRenderer.flipX = false;
         }
         else if (moveX < 0)
         {
             direction = -1;
+            spriteRenderer.flipX = true;
         }
 
-        //jumps and dashes
+        // Jumping
 
         if (Input.GetButtonDown("Jump"))
         {
@@ -72,7 +78,7 @@ public class PlayerMoves : MonoBehaviour
         {
             rb.sharedMaterial.friction = 0;
             jumpInputTime = -2;
-            //jumping = true;
+            anim.SetTrigger("Jumping");
             if (Time.time - coyoteTime >= bufferTime)
             {
                 hasAirJump = false;
@@ -88,11 +94,12 @@ public class PlayerMoves : MonoBehaviour
             }
         }
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
-        //&& jumping 
         {
-            //jumping = false;
             rb.velocity = new Vector3(rb.velocity.x, 0.5f * rb.velocity.y);
         }
+
+        // Dashing
+
         if (Input.GetButtonDown("Shift"))
         {
             dashInputTime = Time.time;
@@ -104,13 +111,35 @@ public class PlayerMoves : MonoBehaviour
             rb.gravityScale = 0;
             rb.velocity = Vector2.zero;
             dashing = true;
+            anim.SetBool("Dashing", true);
             rb.AddForce(Vector2.right * dashForce * direction, ForceMode2D.Impulse);
             dashTime = Time.time;
         }
         if (Time.time - dashTime >= dashLength)
         {
             dashing = false;
+            anim.SetBool("Dashing", false);
             rb.gravityScale = 3;
+        }
+
+        // Running animation
+        if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0)
+        {
+            anim.SetBool("Running", true);
+        }
+        else
+        {
+            anim.SetBool("Running", false);
+        }
+
+        // Falling animation
+        if (grounded || rb.velocity.y >= 0)
+        {
+            anim.SetBool("Falling", false);
+        }
+        else
+        {
+            anim.SetBool("Falling", true);
         }
     }
     bool isGrounded()
