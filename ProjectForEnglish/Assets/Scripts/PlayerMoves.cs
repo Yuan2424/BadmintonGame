@@ -37,8 +37,10 @@ public class PlayerMoves : MonoBehaviour
     void Update()
     {
         //grounded checking
-
-        grounded = isGrounded();
+        if (!dashing)
+        {
+            grounded = isGrounded();
+        }
         if (grounded)
         {
             coyoteTime = Time.time;
@@ -78,6 +80,7 @@ public class PlayerMoves : MonoBehaviour
         {
             rb.sharedMaterial.friction = 0;
             jumpInputTime = -2;
+            anim.SetBool("Dashing", false);
             anim.SetTrigger("Jumping");
             if (Time.time - coyoteTime >= bufferTime)
             {
