@@ -13,19 +13,26 @@ public class PlayerMoves : MonoBehaviour
     float dashForce = 20.0f;
     float moveX;
     //bool jumping;
+
+    //state variables
     bool dashing;
+    bool dashJumping;
     bool grounded;
     bool hasAirJump;
     bool hasAirDash;
+
     int direction;
+    int dashDirection;
     float dashLength = 0.2f;
-    float dashTime;
+    float dashJumpLength = 0.5f;
 
     //buffer variables
     float bufferTime = 0.1f;
     float jumpInputTime;
     float coyoteTime;
     float dashInputTime;
+    float dashTime;
+    float dashJumpTime;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -45,16 +52,33 @@ public class PlayerMoves : MonoBehaviour
         {
             coyoteTime = Time.time;
             rb.sharedMaterial.friction = 2f;
+            dashJumping = false;
+            dashJumpLength = 0.5f;
         }
         else
         {
             rb.sharedMaterial.friction = 0;
         }
 
+        //Horizontal movement
+
         moveX = Input.GetAxis("Horizontal") * speed;
-        if (!dashing)
+        if (!dashing && !dashJumping)
         {
             rb.velocity = new Vector3(moveX, rb.velocity.y);
+        }
+        if (!dashing && dashJumping)
+        {
+            rb.velocity = new Vector3(moveX * 0.5f + dashDirection * speed, rb.velocity.y);
+        }
+        if (direction != dashDirection)
+        {
+            dashJumpLength -= 0.02f;
+        }
+        if (Time.time - dashJumpTime > dashJumpLength)
+        {
+            dashJumping = false;
+            dashJumpLength = 0.5f;
         }
 
         //directions
@@ -90,6 +114,9 @@ public class PlayerMoves : MonoBehaviour
             if (dashing)
             {
                 rb.AddForce(Vector2.up * jumpForceFromDash, ForceMode2D.Impulse);
+                dashJumping = true;
+                dashJumpTime = Time.time;
+                dashing = false;
             }
             else
             {
@@ -116,6 +143,7 @@ public class PlayerMoves : MonoBehaviour
             dashing = true;
             anim.SetBool("Dashing", true);
             rb.AddForce(Vector2.right * dashForce * direction, ForceMode2D.Impulse);
+            dashDirection = direction;
             dashTime = Time.time;
         }
         if (Time.time - dashTime >= dashLength)
