@@ -44,10 +44,7 @@ public class PlayerMoves : MonoBehaviour
     void Update()
     {
         //grounded checking
-        if (!dashing)
-        {
-            grounded = isGrounded();
-        }
+        grounded = isGrounded() && !dashing;
         if (grounded)
         {
             coyoteTime = Time.time;
@@ -56,6 +53,12 @@ public class PlayerMoves : MonoBehaviour
             dashJumpLength = 0.5f;
         }
         else
+        {
+            rb.sharedMaterial.friction = 0;
+        }
+
+        //Dashing checking
+        if (dashing)
         {
             rb.sharedMaterial.friction = 0;
         }
@@ -69,7 +72,7 @@ public class PlayerMoves : MonoBehaviour
         }
         if (!dashing && dashJumping)
         {
-            rb.velocity = new Vector3(moveX * 0.5f + dashDirection * speed, rb.velocity.y);
+            rb.velocity = new Vector3(moveX + dashDirection * speed * (1 - 2 * (Time.time - dashJumpTime)), rb.velocity.y);
         }
         if (direction != dashDirection)
         {
@@ -117,6 +120,7 @@ public class PlayerMoves : MonoBehaviour
                 dashJumping = true;
                 dashJumpTime = Time.time;
                 dashing = false;
+                rb.sharedMaterial.friction = 0;
             }
             else
             {
@@ -136,6 +140,7 @@ public class PlayerMoves : MonoBehaviour
         }
         if (Time.time - dashInputTime < bufferTime && hasAirDash)
         {
+            rb.sharedMaterial.friction = 0;
             dashInputTime = -2;
             hasAirDash = false;
             rb.gravityScale = 0;
@@ -148,6 +153,7 @@ public class PlayerMoves : MonoBehaviour
         }
         if (Time.time - dashTime >= dashLength)
         {
+            rb.sharedMaterial.friction = 2;
             dashing = false;
             anim.SetBool("Dashing", false);
             rb.gravityScale = 3;
