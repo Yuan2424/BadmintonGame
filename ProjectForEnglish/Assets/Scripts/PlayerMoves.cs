@@ -44,7 +44,7 @@ public class PlayerMoves : MonoBehaviour
     void Update()
     {
         //grounded checking
-        grounded = isGrounded() && !dashing;
+        grounded = isGrounded() && !dashing && !dashJumping;
         if (grounded)
         {
             coyoteTime = Time.time;
