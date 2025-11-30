@@ -11,7 +11,10 @@ public class PlayerMoves : MonoBehaviour
     float jumpForce = 13.0f;
     float jumpForceFromDash = 7.0f;
     float dashForce = 20.0f;
+    float shuttleForce = 4f;
     float moveX;
+    GameObject shuttle;
+    GameObject crosshair;
     //bool jumping;
 
     //state variables
@@ -20,6 +23,7 @@ public class PlayerMoves : MonoBehaviour
     bool grounded;
     bool hasAirJump;
     bool hasAirDash;
+    bool timeFrozen = false;
 
     int direction;
     int dashDirection;
@@ -38,12 +42,15 @@ public class PlayerMoves : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        shuttle = GameObject.Find("Shuttle");
+        crosshair = GameObject.Find("Crosshair");
+        Time.timeScale = 1;
     }
 
     
     void Update()
     {
-        //grounded checking
+        // Grounded checking
         grounded = isGrounded() && !dashing && !dashJumping;
         if (grounded)
         {
@@ -57,13 +64,13 @@ public class PlayerMoves : MonoBehaviour
             rb.sharedMaterial.friction = 0;
         }
 
-        //Dashing checking
+        // Dashing checking
         if (dashing)
         {
             rb.sharedMaterial.friction = 0;
         }
 
-        //Horizontal movement
+        // Horizontal movement
 
         moveX = Input.GetAxis("Horizontal") * speed;
         if (!dashing && !dashJumping)
@@ -84,7 +91,7 @@ public class PlayerMoves : MonoBehaviour
             dashJumpLength = 0.5f;
         }
 
-        //directions
+        // Directions
 
         if (moveX > 0)
         {
@@ -99,33 +106,13 @@ public class PlayerMoves : MonoBehaviour
 
         // Jumping
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && !timeFrozen)
         {
             jumpInputTime = Time.time;
         }
         if (Time.time - jumpInputTime < bufferTime && (Time.time - coyoteTime < bufferTime || hasAirJump))
         {
-            rb.sharedMaterial.friction = 0;
-            jumpInputTime = -2;
-            anim.SetBool("Dashing", false);
-            anim.SetTrigger("Jumping");
-            if (Time.time - coyoteTime >= bufferTime)
-            {
-                hasAirJump = false;
-            }
-            rb.velocity = new Vector3(rb.velocity.x, 0);
-            if (dashing)
-            {
-                rb.AddForce(Vector2.up * jumpForceFromDash, ForceMode2D.Impulse);
-                dashJumping = true;
-                dashJumpTime = Time.time;
-                dashing = false;
-                rb.sharedMaterial.friction = 0;
-            }
-            else
-            {
-                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            }
+            jump();
         }
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
         {
@@ -134,22 +121,13 @@ public class PlayerMoves : MonoBehaviour
 
         // Dashing
 
-        if (Input.GetButtonDown("Shift"))
+        if (Input.GetButtonDown("Shift") && !timeFrozen)
         {
             dashInputTime = Time.time;
         }
         if (Time.time - dashInputTime < bufferTime && hasAirDash)
         {
-            rb.sharedMaterial.friction = 0;
-            dashInputTime = -2;
-            hasAirDash = false;
-            rb.gravityScale = 0;
-            rb.velocity = Vector2.zero;
-            dashing = true;
-            anim.SetBool("Dashing", true);
-            rb.AddForce(Vector2.right * dashForce * direction, ForceMode2D.Impulse);
-            dashDirection = direction;
-            dashTime = Time.time;
+            dash();
         }
         if (Time.time - dashTime >= dashLength)
         {
@@ -157,6 +135,15 @@ public class PlayerMoves : MonoBehaviour
             dashing = false;
             anim.SetBool("Dashing", false);
             rb.gravityScale = 3;
+        }
+
+        // Shuttle time unfreezing
+
+        if (Input.GetButtonDown("Z") && timeFrozen)
+        {
+            timeFrozen = false;
+            Time.timeScale = 1;
+            shuttle.GetComponent<Rigidbody2D>().AddForce((crosshair.transform.position - shuttle.transform.position) * shuttleForce, ForceMode2D.Impulse);
         }
 
         // Running animation
@@ -196,5 +183,51 @@ public class PlayerMoves : MonoBehaviour
             }
         }
         return (false);
+    }
+    void jump()
+    {
+        rb.sharedMaterial.friction = 0;
+        jumpInputTime = -2;
+        anim.SetBool("Dashing", false);
+        anim.SetTrigger("Jumping");
+        if (Time.time - coyoteTime >= bufferTime)
+        {
+            hasAirJump = false;
+        }
+        rb.velocity = new Vector3(rb.velocity.x, 0);
+        if (dashing)
+        {
+            rb.AddForce(Vector2.up * jumpForceFromDash, ForceMode2D.Impulse);
+            dashJumping = true;
+            dashJumpTime = Time.time;
+            dashing = false;
+            rb.sharedMaterial.friction = 0;
+        }
+        else
+        {
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
+    }
+    void dash()
+    {
+        rb.sharedMaterial.friction = 0;
+        dashInputTime = -2;
+        hasAirDash = false;
+        rb.gravityScale = 0;
+        rb.velocity = Vector2.zero;
+        dashing = true;
+        anim.SetBool("Dashing", true);
+        rb.AddForce(Vector2.right * dashForce * direction, ForceMode2D.Impulse);
+        dashDirection = direction;
+        dashTime = Time.time;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponentInParent<ShuttleRotation>())
+        {
+            Time.timeScale = 0;
+            timeFrozen = true;
+            crosshair.transform.position = transform.position;
+        }
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 public class ShuttleRotation : MonoBehaviour
 {
     Rigidbody2D rb;
-    Vector3 dirToMouse;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -14,7 +13,16 @@ public class ShuttleRotation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dirToMouse = Input.mousePosition - transform.position;
-        transform.rotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan(dirToMouse.y / dirToMouse.x));
+        if (!rb.velocity.Equals(Vector2.zero))
+        {
+            if (rb.velocity.x >= 0)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 45 + Mathf.Rad2Deg * Mathf.Asin(rb.velocity.y / rb.velocity.magnitude));
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 225 + Mathf.Rad2Deg * Mathf.Atan(rb.velocity.y / rb.velocity.x));
+            }
+        }
     }
 }
