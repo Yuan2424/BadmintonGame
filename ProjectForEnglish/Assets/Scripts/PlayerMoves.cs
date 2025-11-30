@@ -11,7 +11,6 @@ public class PlayerMoves : MonoBehaviour
     float jumpForce = 13.0f;
     float jumpForceFromDash = 7.0f;
     float dashForce = 20.0f;
-    float shuttleForce = 4f;
     float moveX;
     GameObject shuttle;
     GameObject crosshair;
@@ -139,11 +138,23 @@ public class PlayerMoves : MonoBehaviour
 
         // Shuttle time unfreezing
 
-        if (Input.GetButtonDown("Z") && timeFrozen)
+        if (Input.GetButtonDown("Z") && timeFrozen && Vector3.Distance(crosshair.transform.position, transform.position) > 2)
         {
             timeFrozen = false;
             Time.timeScale = 1;
-            shuttle.GetComponent<Rigidbody2D>().AddForce((crosshair.transform.position - shuttle.transform.position) * shuttleForce, ForceMode2D.Impulse);
+            shuttle.GetComponent<ShuttleMovement>().moveShuttle(crosshair.transform.position);
+        }
+        if (Vector3.Distance(crosshair.transform.position, transform.position) <= 2)
+        {
+            Color newColor = Color.red;
+            newColor.a = 0.67f;
+            crosshair.GetComponent<SpriteRenderer>().color = newColor;
+        }
+        else
+        {
+            Color newColor = Color.white;
+            newColor.a = 0.67f;
+            crosshair.GetComponent<SpriteRenderer>().color = newColor;
         }
 
         // Running animation

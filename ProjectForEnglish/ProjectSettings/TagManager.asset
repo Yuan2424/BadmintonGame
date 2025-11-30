@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Floor
   - Shuttle
+  - CrosshairPos
   layers:
   - Default
   - TransparentFX

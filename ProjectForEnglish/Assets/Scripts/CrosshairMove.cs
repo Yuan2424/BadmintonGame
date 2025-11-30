@@ -15,8 +15,11 @@ public class CrosshairMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = transform.position + new Vector3(Input.GetAxisRaw("Horizontal") * Time.unscaledDeltaTime * speed, Input.GetAxisRaw("Vertical") * Time.unscaledDeltaTime * speed);
-        Physics.SyncTransforms();
+        if (Time.timeScale == 0)
+        {
+            transform.position = transform.position + new Vector3(Input.GetAxisRaw("Horizontal") * Time.unscaledDeltaTime * speed, Input.GetAxisRaw("Vertical") * Time.unscaledDeltaTime * speed);
+            Physics.SyncTransforms();
+        }
         spriteRenderer.enabled = Time.timeScale == 0;
     }
 }
