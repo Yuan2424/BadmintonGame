@@ -44,3 +44,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Player
+    uniqueID: 2989794269
+    locked: 0
+  - name: Shuttle
+    uniqueID: 3883086751
+    locked: 0
+  - name: Environment
+    uniqueID: 3901797817
+    locked: 0
+  - name: Crosshair
+    uniqueID: 776530729
+    locked: 0
