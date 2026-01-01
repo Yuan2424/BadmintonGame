@@ -142,6 +142,7 @@ public class PlayerMoves : MonoBehaviour
         {
             timeFrozen = false;
             Time.timeScale = 1;
+            rb.velocity = Vector2.zero;
             shuttle.GetComponent<ShuttleMovement>().moveShuttle(crosshair.transform.position);
         }
         if (Vector3.Distance(crosshair.transform.position, transform.position) <= 2)

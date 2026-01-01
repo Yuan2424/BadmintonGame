@@ -35,4 +35,11 @@ public class ShuttleMovement : MonoBehaviour
             rb.velocity = rb.velocity * 0.5f;
         }
     }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            rb.gravityScale = 0.5f;
+        }
+    }
 }
