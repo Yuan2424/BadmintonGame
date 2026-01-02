@@ -233,6 +233,14 @@ public class PlayerMoves : MonoBehaviour
         dashDirection = direction;
         dashTime = Time.time;
     }
+    public Vector3 getPlayerVelocity()
+    {
+        return rb.velocity;
+    }
+    public Vector3 getPlayerPos()
+    {
+        return transform.position;
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.GetComponentInParent<ShuttleRotation>())
