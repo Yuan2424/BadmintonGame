@@ -22,7 +22,7 @@ public class CamBox : MonoBehaviour
         if (Vector3.Distance(transform.position, player.transform.position) > 1.5f && playerScript.getPlayerVelocity().magnitude > 0.2f)
         {
             following = false;
-            rb.velocity = (player.transform.position - transform.position).normalized * playerScript.getPlayerVelocity().magnitude;
+            rb.velocity = (player.transform.position - transform.position).normalized * playerScript.getPlayerVelocity().magnitude * 0.95f;
         }
         else if (Vector3.Distance(transform.position, player.transform.position) > 1.5f)
         {
@@ -40,8 +40,6 @@ public class CamBox : MonoBehaviour
         if (Vector3.Distance(transform.position, player.transform.position) < 0.2f)
         {
             following = false;
-            Debug.Log("set it to false");
         }
-        Debug.Log("following is " + following);
     }
 }
