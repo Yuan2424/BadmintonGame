@@ -249,5 +249,9 @@ public class PlayerMoves : MonoBehaviour
             timeFrozen = true;
             crosshair.transform.position = transform.position;
         }
+        if (collision.gameObject.CompareTag("Exclaim"))
+        {
+            collision.gameObject.GetComponent<ButtonBehavior>().activated();
+        }
     }
 }
