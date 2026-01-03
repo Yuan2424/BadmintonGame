@@ -34,6 +34,10 @@ public class ShuttleMovement : MonoBehaviour
             rb.gravityScale = 0.5f;
             rb.velocity = rb.velocity * 0.5f;
         }
+        if (collision.CompareTag("ColorShuttle"))
+        {
+            collision.gameObject.GetComponent<ButtonBehavior>().activated();
+        }
     }
     private void OnCollisionStay2D(Collision2D collision)
     {

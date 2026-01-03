@@ -254,4 +254,13 @@ public class PlayerMoves : MonoBehaviour
             collision.gameObject.GetComponent<ButtonBehavior>().activated();
         }
     }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Feather") && (!hasAirDash || !hasAirJump))
+        {
+            hasAirJump = true;
+            hasAirDash = true;
+            collision.gameObject.GetComponent<FeatherBehavior>().activated();
+        }
+    }
 }

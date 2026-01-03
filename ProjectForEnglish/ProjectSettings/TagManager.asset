@@ -8,6 +8,8 @@ TagManager:
   - Shuttle
   - CrosshairPos
   - Exclaim
+  - ColorShuttle
+  - Feather
   layers:
   - Default
   - TransparentFX
