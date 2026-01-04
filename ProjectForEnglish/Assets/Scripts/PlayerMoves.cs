@@ -253,6 +253,11 @@ public class PlayerMoves : MonoBehaviour
         {
             collision.gameObject.GetComponent<ButtonBehavior>().activated();
         }
+        if (collision.gameObject.CompareTag("Clock"))
+        {
+            collision.gameObject.GetComponent<ClockBehavior>().setTimer();
+            collision.gameObject.GetComponent<ClockBehavior>().activated();
+        }
     }
     private void OnTriggerStay2D(Collider2D collision)
     {

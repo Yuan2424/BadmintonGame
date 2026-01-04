@@ -10,6 +10,7 @@ TagManager:
   - Exclaim
   - ColorShuttle
   - Feather
+  - Clock
   layers:
   - Default
   - TransparentFX
