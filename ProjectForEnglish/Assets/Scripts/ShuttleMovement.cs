@@ -7,10 +7,12 @@ public class ShuttleMovement : MonoBehaviour
     Rigidbody2D rb;
     float shuttleForce = 4;
     Vector3 dest;
+    public bool shuttleActive;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        shuttleActive = true;
     }
 
     // Update is called once per frame
@@ -37,6 +39,12 @@ public class ShuttleMovement : MonoBehaviour
         if (collision.CompareTag("ColorShuttle"))
         {
             collision.gameObject.GetComponent<ButtonBehavior>().activated();
+        }
+        if (collision.CompareTag("LevelEnd"))
+        {
+            GetComponent<SpriteRenderer>().enabled = false;
+            GetComponent<Collider2D>().enabled = false;
+            shuttleActive = false;
         }
     }
     private void OnCollisionStay2D(Collision2D collision)

@@ -35,7 +35,7 @@ public class CamBox : MonoBehaviour
         }
         if (following)
         {
-            rb.velocity = (player.transform.position - transform.position).normalized * 4;
+            rb.velocity = (player.transform.position - transform.position).normalized * 6;
         }
         if (Vector3.Distance(transform.position, player.transform.position) < 0.2f)
         {

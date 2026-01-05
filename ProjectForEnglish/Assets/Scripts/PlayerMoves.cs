@@ -258,6 +258,10 @@ public class PlayerMoves : MonoBehaviour
             collision.gameObject.GetComponent<ClockBehavior>().setTimer();
             collision.gameObject.GetComponent<ClockBehavior>().activated();
         }
+        if (collision.gameObject.CompareTag("LevelEnd") && !shuttle.GetComponent<ShuttleMovement>().shuttleActive)
+        {
+            collision.gameObject.GetComponent<LevelLoader>().loadLevel();
+        }
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
