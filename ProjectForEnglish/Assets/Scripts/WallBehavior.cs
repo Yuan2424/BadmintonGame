@@ -12,6 +12,20 @@ public class WallBehavior : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         col = GetComponent<Collider2D>();
+        if (active)
+        {
+            Color current = spriteRenderer.color;
+            current.a = 1;
+            spriteRenderer.color = current;
+            col.enabled = true;
+        }
+        else
+        {
+            Color current = spriteRenderer.color;
+            current.a = 0.25f;
+            spriteRenderer.color = current;
+            col.enabled = false;
+        }
     }
 
     // Update is called once per frame

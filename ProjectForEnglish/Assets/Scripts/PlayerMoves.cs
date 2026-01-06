@@ -124,7 +124,7 @@ public class PlayerMoves : MonoBehaviour
         {
             dashInputTime = Time.time;
         }
-        if (Time.time - dashInputTime < bufferTime && hasAirDash)
+        if (Time.time - dashInputTime < bufferTime && hasAirDash && dashInputTime > dashTime + 0.5f)
         {
             dash();
         }
