@@ -8,11 +8,13 @@ public class ShuttleMovement : MonoBehaviour
     float shuttleForce = 4;
     Vector3 dest;
     public bool shuttleActive;
+    Vector3 startPos;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         shuttleActive = true;
+        startPos = transform.position;
     }
 
     // Update is called once per frame
@@ -28,6 +30,10 @@ public class ShuttleMovement : MonoBehaviour
         dest = destination;
         rb.gravityScale = 0;
         rb.AddForce((destination - transform.position) * shuttleForce, ForceMode2D.Impulse);
+    }
+    public void resetShuttle()
+    {
+        transform.position = startPos;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

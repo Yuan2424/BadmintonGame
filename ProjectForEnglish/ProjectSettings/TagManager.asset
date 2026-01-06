@@ -12,6 +12,7 @@ TagManager:
   - Feather
   - Clock
   - LevelEnd
+  - SpikyBush
   layers:
   - Default
   - TransparentFX

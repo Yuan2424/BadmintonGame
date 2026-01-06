@@ -14,6 +14,8 @@ public class PlayerMoves : MonoBehaviour
     float moveX;
     GameObject shuttle;
     GameObject crosshair;
+    GameObject camBox;
+    Vector3 startPos;
     //bool jumping;
 
     //state variables
@@ -43,7 +45,9 @@ public class PlayerMoves : MonoBehaviour
         anim = GetComponent<Animator>();
         shuttle = GameObject.Find("Shuttle");
         crosshair = GameObject.Find("Crosshair");
+        camBox = GameObject.Find("CamBox");
         Time.timeScale = 1;
+        startPos = transform.position;
     }
 
     
@@ -261,6 +265,12 @@ public class PlayerMoves : MonoBehaviour
         if (collision.gameObject.CompareTag("LevelEnd") && !shuttle.GetComponent<ShuttleMovement>().shuttleActive)
         {
             collision.gameObject.GetComponent<LevelLoader>().loadLevel();
+        }
+        if (collision.gameObject.CompareTag("SpikyBush"))
+        {
+            transform.position = startPos;
+            shuttle.GetComponent<ShuttleMovement>().resetShuttle();
+            camBox.GetComponent<CamBox>().resetCamBox();
         }
     }
     private void OnTriggerStay2D(Collider2D collision)

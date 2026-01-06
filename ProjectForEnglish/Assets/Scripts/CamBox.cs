@@ -8,12 +8,14 @@ public class CamBox : MonoBehaviour
     PlayerMoves playerScript;
     Rigidbody2D rb;
     bool following = false;
+    Vector3 startPos;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         playerScript = player.GetComponent<PlayerMoves>();
         rb = GetComponent<Rigidbody2D>();
+        startPos = transform.position;
     }
 
     // Update is called once per frame
@@ -41,5 +43,9 @@ public class CamBox : MonoBehaviour
         {
             following = false;
         }
+    }
+    public void resetCamBox()
+    {
+        transform.position = startPos;
     }
 }
