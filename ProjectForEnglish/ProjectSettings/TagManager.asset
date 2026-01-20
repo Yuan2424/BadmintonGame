@@ -56,6 +56,9 @@ TagManager:
   - name: Shuttle
     uniqueID: 3883086751
     locked: 0
+  - name: SpikyWall
+    uniqueID: 3322743773
+    locked: 0
   - name: Environment
     uniqueID: 3901797817
     locked: 0
