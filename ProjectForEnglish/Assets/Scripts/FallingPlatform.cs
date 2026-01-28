@@ -7,13 +7,14 @@ public class FallingPlatform : MonoBehaviour
     Animator anim;
     SpriteRenderer spriteRenderer;
     Collider2D col;
-    float crumbleDuration = 1.333f;
+    float crumbleDuration = 1.333f; //1.333f
     float crumbleStart;
     bool isCrumbling = false;
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
+        anim.speed = 1;
         spriteRenderer = GetComponent<SpriteRenderer>();
         col = GetComponent<Collider2D>();
     }
@@ -26,12 +27,19 @@ public class FallingPlatform : MonoBehaviour
             spriteRenderer.enabled = false;
             col.enabled = false;
         }
+        if (Time.timeScale == 0)
+        {
+            anim.speed = 0;
+        }
+        else
+        {
+            anim.speed = 1;
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Player"))
+        if (collision.collider.CompareTag("Player") && !isCrumbling)
         {
-            Debug.Log("fjweoijife");
             anim.SetTrigger("PlayerContact");
             crumbleStart = Time.time;
             isCrumbling = true;
