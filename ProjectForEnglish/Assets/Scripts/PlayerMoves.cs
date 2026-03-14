@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMoves : MonoBehaviour
 {
@@ -268,9 +269,10 @@ public class PlayerMoves : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("SpikyBush"))
         {
-            transform.position = startPos;
-            shuttle.GetComponent<ShuttleMovement>().resetShuttle();
-            camBox.GetComponent<CamBox>().resetCamBox();
+            //transform.position = startPos;
+            //shuttle.GetComponent<ShuttleMovement>().resetShuttle();
+            //camBox.GetComponent<CamBox>().resetCamBox();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
